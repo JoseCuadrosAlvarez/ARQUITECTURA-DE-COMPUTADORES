@@ -1,26 +1,36 @@
 #include <iostream>
 #include <bitset>
 
-std::string SumaBinaria(int a, int b) {
-    int sum = a + b;
-    return std::bitset<32>(sum).to_string(); // suma los bits y los transforma en string para poder imprimirse
+// convertir un entero en una cadena binaria de 32 bits
+std::string EnteroABinario(int n) {
+    return std::bitset<32>(n).to_string();
 }
 
-int Multiplicacion(int multiplicando, int multiplicador) {
+// obtener la suma binaria de dos enteros
+std::string SumaBinaria(int a, int b) {
+    int suma = a + b;
+    return std::bitset<32>(suma).to_string();
+}
+
+// multiplicaci贸n de dos enteros utilizando operaciones binarias
+int MultiplicacionBinaria(int multiplicando, int multiplicador) {
     int resultado = 0;
-    int multiplicando_v = abs(multiplicando); //sacamos el valor absoluto del multiplicando y multiplicador
-    int multiplicador_v = abs(multiplicador);
+    int absMultiplicando = abs(multiplicando);
+    int absMultiplicador = abs(multiplicador);
     int producto = 0;
 
-    for (int i = 0; i < 32; i++) { // Suponiendo n鷐eros de 32 bits, se puede cambiar por la cantidad de bits que se desee
-        int lsbMultiplicador = multiplicador_v & 1; // Se extrae el bit menos significativo del multiplicador
-        if (lsbMultiplicador == 1) { // SSe suma el valor abosulto al producto parcial
-            producto += multiplicando_v;
+    // multiplicaci贸n bit a bit
+    for (int i = 0; i < 32; i++) {
+        int bitMenosSignificativo = absMultiplicador & 1;
+        if (bitMenosSignificativo == 1) {
+            producto += absMultiplicando;
         }
-        multiplicando_v <<= 1; //Se realiza un corrimiento a la izquierda del valor absoluto del multiplicando y un corrimiento a la derecha del valor absoluto del multiplicador para preparar los siguientes bits de multiplicaci髇.
-        multiplicador_v >>= 1;
+        absMultiplicando <<= 1;
+        absMultiplicador >>= 1;
     }
-    if ((multiplicando < 0) ^ (multiplicador < 0)) { // Se determina el signo del resultado final.
+
+    // determina el signo del resultado
+    if ((multiplicando < 0) ^ (multiplicador < 0)) {
         resultado = -producto;
     }
     else {
@@ -29,22 +39,26 @@ int Multiplicacion(int multiplicando, int multiplicador) {
     return resultado;
 }
 
-std::string Binario(int n) {
-    return std::bitset<32>(n).to_string(); // Transforma el n鷐ero binario en string para que pueda imprimirse en pantalla
-}
-
 int main() {
     while (true) {
-        int multiplicando, multiplicador, producto;
-        multiplicando = 0;
-        multiplicador = 0;
-        producto = Multiplicacion(multiplicando, multiplicador);
-        std::cout << "Ingrese el multiplicando: ";
+        system("cls");
+        std::cout << "Algoritmo de multiplicacion de enteros con signo";
+
+        
+        std::cout << "\n\nIngrese el multiplicando: ";
+        int multiplicando, multiplicador;
         std::cin >> multiplicando;
+
         std::cout << "Ingrese el multiplicador: ";
         std::cin >> multiplicador;
-        std::cout << "Resultado: " << producto << " // En binario: " << Binario(producto) << std::endl;
+
+        int producto = MultiplicacionBinaria(multiplicando, multiplicador);
+        std::cout << "\nMultiplicaci贸n normal: " << producto << std::endl;
+        std::cout << "Multiplicaci贸n en binario: " << EnteroABinario(producto) << std::endl;
+
+        // suma binaria de los multiplicandos
         std::cout << "Suma binaria de los multiplicandos: " << SumaBinaria(multiplicando, multiplicador) << std::endl;
+
+        system("pause");
     }
-    return 0;
 }
